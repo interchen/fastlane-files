@@ -11,7 +11,7 @@ lane :release_pod do |options|
   ensure_git_branch
   version_bump_podspec(path: spec_path, version_number: target_version)
   git_add(path: '.')
-  git_commit(path: '.', message: 'release')
+  #git_commit(path: '.', message: 'release')
   push_to_git_remote
   if git_tag_exists(tag: target_version)
       UI.message("Tag #{target_version} already exists, then, delete it! 💥")
