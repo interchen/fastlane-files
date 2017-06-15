@@ -10,8 +10,8 @@ lane :release_pod do |options|
   git_pull
   ensure_git_branch
   version_bump_podspec(path: spec_path, version_number: target_version)
-  increment_version_number_in_plist()
-  increment_build_number_in_plist()
+  increment_version_number_in_plist
+  increment_build_number_in_plist
   git_add(path: '.')
   git_commit(path: '.', message: 'release')
   push_to_git_remote
