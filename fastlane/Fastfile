@@ -9,11 +9,15 @@ lane :release_pod do |options|
   UI.message("👉 Start release lib #{target_project}")
 
   git_pull
+  
+  #ensure master branch
   ensure_git_branch
   
   increment_version_number_in_plist
   increment_build_number_in_plist
-  target_version = get_version_number_from_plist(target: target_project)
+  target_version_temp = get_version_number_from_plist(target: target_project)
+  target_build = get_build_number_from_plist(target: target_project)
+  target_version = "#{target_version_temp}.#{target_build}"
   version_bump_podspec(path: spec_path, version_number: target_version)
   UI.message("👉 new version #{target_version}")
   
@@ -45,9 +49,17 @@ lane :beta_pod do |options|
   UI.message("👉 Start release lib #{target_project} new version #{target_version}")
 
   git_pull
-  ensure_git_branch
-  version_bump_podspec(path: spec_path, version_number: target_version)
+  
+  #ensure develop branch
+  ensure_git_branch(branch: 'develop')
+  
   increment_build_number_in_plist
+  target_version_temp = get_version_number_from_plist(target: target_project)
+  target_build = get_build_number_from_plist(target: target_project)
+  target_version = "#{target_version_temp}.#{target_build}"
+  version_bump_podspec(path: spec_path, version_number: target_version)
+  UI.message("👉 new version #{target_version}")
+  
   git_add(path: '.')
   git_commit(path: '.', message: 'release')
   push_to_git_remote
@@ -60,9 +72,9 @@ lane :beta_pod do |options|
   pod_lib_lint(allow_warnings: true, use_bundle_exec: false)
   if target_repo
     pod_push(path: spec_path, repo: target_repo, allow_warnings: true)
-    UI.message("Release lib #{target_project} new version #{target_version} to repo #{target_repo} Successfully! 🎉 ")
+    UI.message("Release beta lib #{target_project} new version #{target_version} to repo #{target_repo} Successfully! 🎉 ")
   else
     pod_push(path: spec_path, allow_warnings: true)
-    UI.message("Release lib #{target_project} new version #{target_version} to CocoaPods/Specs Successfully! 🎉 ")
+    UI.message("Release beta lib #{target_project} new version #{target_version} to CocoaPods/Specs Successfully! 🎉 ")
   end
 end
