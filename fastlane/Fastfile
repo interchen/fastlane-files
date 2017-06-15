@@ -1,4 +1,5 @@
 desc 'Release new pod version'
+fastlane add_plugin versioning
 lane :release_pod do |options|
   target_repo    = options[:repo]
   target_project = options[:project]
