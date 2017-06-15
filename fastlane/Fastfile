@@ -45,7 +45,7 @@ lane :beta_pod do |options|
   target_version = options[:version]
   spec_path = "#{target_project}.podspec"
 
-  UI.message("👉 Start release lib #{target_project} new version #{target_version}, build #{target_build}")
+  UI.message("👉 Start release beta lib #{target_project}")
 
   git_pull
   
